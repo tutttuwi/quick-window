@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@7.29.0",
-  "description": "Qiitaの記事ページに投稿者の情報を表示する拡張機能です！",
+  "description": "QuickWindow allows you to open another page within the browser.",
   "scripts": {
     "dev": "npm run clear && cross-env NODE_ENV=development run-p dev:*",
     "dev:prepare": "esno scripts/prepare.ts",
