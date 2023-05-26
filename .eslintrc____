@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "@antfu",
+    "eslint:recommended", // ESLintのJavaScriptルールセットを適用
+    "plugin:@typescript-eslint/eslint-recommended", // eslint:recommendedに含まれるルールを型チェックでカバーできるものは無効化
+    "plugin:@typescript-eslint/recommended", // 型チェックが不要なルールを適用
+    "plugin:@typescript-eslint/recommended-requiring-type-checking" // 型チェックが必要なルールを適用
+  ],
+  "rules": {
+    "semi": ["off", "always"],
+    "semi-spacing": ["off", { "after": true, "before": false }],
+    "semi-style": ["off", "last"],
+    "no-extra-semi": "off",
+    "no-unexpected-multiline": "off",
+    "no-unreachable": "off",
+    "no-console": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]",
+        "message": "Unexpected property on console object was called"
+      }
+    ]
+  }
+}

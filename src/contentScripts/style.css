@@ -1,0 +1,10 @@
+.qiita-window-container {
+  right: 0px;
+  top: 100px;
+}
+
+.qiita-window-inner {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
