@@ -18,3 +18,8 @@
 // };
 
 type ValueOf<T> = T[keyof T];
+
+interface IframeTab {
+  title: string;
+  url: string;
+}

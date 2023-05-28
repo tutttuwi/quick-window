@@ -1,11 +1,24 @@
 html,
 body,
 #app {
+  width: 650px;
   margin: 0;
   padding: 0;
 }
 
-.qiita-window-container {
-  right: 0px;
-  bottom: 20px;
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.tab-item {
+  width: 150px;
+  border-top: 1px solid grey;
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+  border-radius: 5px 5px 0px 0px;
+  pointer: cursor;
+}
+
+.iframe-input-url {
+  border-radius: 25px;
 }

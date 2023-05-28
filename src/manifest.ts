@@ -16,10 +16,10 @@ const getSharedManifest = async () => {
     version: pkg.version,
     default_locale: 'ja',
     description: pkg.description,
-    // options_ui: {
-    //   page: './dist/options/index.html',
-    //   open_in_tab: true,
-    // },
+    options_ui: {
+      page: './dist/options/index.html',
+      open_in_tab: true,
+    },
     icons: {
       16: './assets/icon-256.png',
       48: './assets/icon-256.png',
@@ -45,12 +45,12 @@ export async function getManifest() {
   const manifest = await getSharedManifest();
   const browserAction = {
     default_icon: './assets/icon-256.png',
-    // default_popup: './dist/popup/index.html',
+    default_popup: './dist/popup/index.html',
   };
-  // const permissions = {
-  //   type: ['tabs', 'storage', 'tabGroups', 'favicon', 'alarms', 'notifications'],
-  //   host: ['http://*/', 'https://*/'],
-  // };
+  const permissions = {
+    type: ['tabs', 'storage', 'tabGroups', 'favicon', 'alarms', 'notifications'],
+    host: ['http://*/', 'https://*/'],
+  };
 
   // v2はコメントアウト
   // if (isDev) {
@@ -77,11 +77,11 @@ export async function getManifest() {
     ...manifest,
     manifest_version: 3,
     action: browserAction,
-    // background: {
-    //   service_worker: './dist/background/index.global.js',
-    // },
-    // permissions: permissions.type,
-    // host_permissions: permissions.host,
+    background: {
+      service_worker: './dist/background/index.global.js',
+    },
+    permissions: permissions.type,
+    host_permissions: permissions.host,
     web_accessible_resources: [
       {
         resources: ['assets/*', 'dist/*'],
