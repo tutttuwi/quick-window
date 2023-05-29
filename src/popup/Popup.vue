@@ -3,6 +3,12 @@
 const tabList: Ref<Array<IframeTab>> = ref([]);
 const iframeUrl: Ref<string> = ref("");
 
+function fetchIframe(event: any) {
+  iframeUrl.value = "";
+  iframeUrl.value = event.target.value;
+  // document.getElementsByClassName(".iframe-element").item(0).src = "";
+}
+
 </script>
 
 <template>
@@ -38,21 +44,22 @@ const iframeUrl: Ref<string> = ref("");
             </div>
           </div>
         </div>
-        <div class="tools-container d-flex flex-row align-items-center px-2">
+        <div class="tools-container d-flex flex-row align-items-center px-2 my-2">
           <div class="iframe-reload cursor-pointer mx-3">
             <tabler:reload />
           </div>
-          <div class="iframe-url w-100 align-items-center d-flex" data-item="★">
-            <img class="iframe-favicon" src="https://drive.google.com/uc?id=1leqES9_BkOYL9C_YRM4qWk0R_F365E7X&.png" />
-            <input class="form-control iframe-input-url" type="text" name="input-url">
+          <div class="iframe-url w-100 align-items-center" data-item="★">
+            <ri:chrome-fill class="iframe-favicon" />
+            <input class="form-control iframe-input-url" type="text" name="input-url"
+              v-on:keydown.enter="fetchIframe($event)">
           </div>
         </div>
       </template>
     </div>
 
     <div class="iframe-body">
-      <iframe class="list-scroll" :src="iframeUrl" frameborder="0" style="border: 0" width="650" height="500"
-        scrolling="no"></iframe>
+      <iframe class="list-scroll iframe-element" :src="iframeUrl" frameborder="0" style="border: 0" width="650"
+        height="500"></iframe>
     </div>
 
   </div>

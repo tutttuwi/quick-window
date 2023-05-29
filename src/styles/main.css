@@ -29,9 +29,14 @@ body,
 .iframe-favicon {
   width: 20px;
   height: 20px;
-  position: relative;
-  left: 35px;
+  position: absolute;
+  left: 13px;
+  top: 10px;
 }
+.iframe-url {
+  position: relative;
+}
+
 /* 
 .iframe-url::before {
   content: attr(data-item);
