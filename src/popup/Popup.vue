@@ -42,7 +42,8 @@ const iframeUrl: Ref<string> = ref("");
           <div class="iframe-reload cursor-pointer mx-3">
             <tabler:reload />
           </div>
-          <div class="iframe-url w-100">
+          <div class="iframe-url w-100 align-items-center d-flex" data-item="★">
+            <img class="iframe-favicon" src="https://drive.google.com/uc?id=1leqES9_BkOYL9C_YRM4qWk0R_F365E7X&.png" />
             <input class="form-control iframe-input-url" type="text" name="input-url">
           </div>
         </div>

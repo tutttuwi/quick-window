@@ -22,3 +22,30 @@ body,
 .iframe-input-url {
   border-radius: 25px;
 }
+
+.iframe-input-url {
+  padding-left: 40px;
+}
+.iframe-favicon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  left: 35px;
+}
+/* 
+.iframe-url::before {
+  content: attr(data-item);
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: #fd8b8f;
+  border-radius: 10%;
+  margin-right: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  position: relative;
+  left: 40px;
+} */
