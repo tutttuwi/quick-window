@@ -20,6 +20,7 @@
 type ValueOf<T> = T[keyof T];
 
 interface IframeTab {
+  uuid: string;
   title: string;
   url: string;
 }
