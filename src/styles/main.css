@@ -12,11 +12,23 @@ body,
 
 .tab-item {
   width: 150px;
-  border-top: 1px solid grey;
-  border-left: 1px solid grey;
-  border-right: 1px solid grey;
-  border-radius: 5px 5px 0px 0px;
   pointer: cursor;
+}
+.tab-item-container {
+  background-color: #ccc;
+}
+
+.tab-active {
+  background-color: #eee;
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.tab-passive {
+  background-color: #ccc;
+  border-radius: 5px 5px 0px 0px;
 }
 
 .iframe-input-url {

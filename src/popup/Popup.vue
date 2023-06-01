@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { savedTabList } from '~/logic/storage'
 
-const parsedSavedTabList = computed<IframeTab[]>(() => JSON.parse(savedTabList.value));
+const parsedSavedTabList = computed<IframeTab[]>(() => {
+  const parsedSavedTabList = JSON.parse(savedTabList.value);
+  console.log(parsedSavedTabList);
+  if (parsedSavedTabList.length === 0) {
+    parsedSavedTabList.push({
+      uuid: crypto.randomUUID(),
+      title: '新しいタブ',
+      url: '',
+      active: true
+    });
+  }
+  return parsedSavedTabList;
+});
 
 // const tabList: Ref<Array<IframeTab>> = ref([]);
 const activeUrl: Ref<string> = ref("");
@@ -40,7 +52,10 @@ function fetchIframe(event: any) {
 }
 
 function iframeReload() {
-  document.getElementById("iframe-content").src += ''; // リロードさせる
+  const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
+  if (inputValue) {
+    document.getElementById("iframe-content").src += ''; // リロードさせる
+  }
 }
 
 function deleteTab(deleteTab: IframeTab) {
@@ -53,6 +68,29 @@ function fetchUrl() {
   return activeTab ? activeTab.url : '';
 }
 
+function createTab() {
+  parsedSavedTabList.value.forEach(tabItem => tabItem.active = false);
+  parsedSavedTabList.value.push({
+    uuid: crypto.randomUUID(),
+    title: '新しいタブ',
+    url: '',
+    active: true
+  });
+  savedTabList.value = JSON.stringify(parsedSavedTabList.value);
+}
+
+function activateTab(e: Event, tab: IframeTab) {
+  e.stopPropagation();
+  parsedSavedTabList.value.forEach(tabItem => {
+    if (tab.uuid === tabItem.uuid) {
+      tabItem.active = true;
+    } else {
+      tabItem.active = false;
+    }
+  });
+  savedTabList.value = JSON.stringify(parsedSavedTabList.value);
+}
+
 function init() {
   let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
   if (activeTab) {
@@ -60,6 +98,7 @@ function init() {
   }
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
   activateDate.value = new Date();
+
 }
 init();
 </script>
@@ -68,29 +107,25 @@ init();
   <div class="popup-container">
     <div class="tabs-container">
 
-      <!-- 1件以上登録されている場合 -->
       <template v-if="parsedSavedTabList.length > 0">
-        <div class="tab-item-container m-1 d-flex">
+        <div class="tab-item-container d-flex">
 
           <template v-for="tab of parsedSavedTabList">
-            <div class="tab-item px-2 py-1 d-flex justify-content-between">
-              <div class="tab-item-title text-truncate cursor-pointer" :class="tab.active ? 'tab-active' : ''">{{
+            <div class="tab-item px-2 py-1 d-flex justify-content-between"
+              :class="tab.active ? 'tab-active' : 'tab-passive'" @click="activateTab($event, tab)">
+              <div class="tab-item-title text-truncate cursor-pointer">{{
                 tab.title }}</div>
-              <div class="cursor-pointer" @click="deleteTab(tab)">
+              <div class="cursor-pointer" @click="deleteTab(tab)" v-if="tab.active">
                 <material-symbols:close />
               </div>
             </div>
           </template>
-
-        </div>
-      </template>
-
-      <!-- 1件も登録されていない場合 -->
-      <template v-else>
-        <div class="tab-item-container m-1">
-          <div class="tab-item px-2 py-1 d-flex flex-row justify-content-between">
-            <div class="tab-item-title text-truncate cursor-pointer">新しいタブ</div>
+          <div class="tab-plus px-2 py-1 d-flex justify-content-between">
+            <div class="tab-item-title text-truncate cursor-pointer" @click="createTab()">
+              <ic:baseline-plus />
+            </div>
           </div>
+
         </div>
       </template>
 
