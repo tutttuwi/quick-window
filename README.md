@@ -1,8 +1,8 @@
-# Quick Window
+# QuickFramer
 
 ## Overview
 
-QuickWindow allows you to open another page within the browser.
+QuickFramer allows you to open another page within the browser.
 
 ## Demo
 

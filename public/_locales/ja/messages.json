@@ -1,18 +1,18 @@
 {
   "appName": {
-    "message": "QuickWindow",
+    "message": "QuickFramer",
     "description": "The name of the application"
   },
   "appShortName": {
-    "message": "QuickWindow",
+    "message": "QuickFramer",
     "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
   },
   "appDescription": {
-    "message": "QuickWindow allows you to open another page within the browser.",
+    "message": "QuickFramer allows you to open another page within the browser.",
     "description": "The description of the application"
   },
   "browserActionTitle": {
-    "message": "QuickWindow",
+    "message": "QuickFramer",
     "description": "The title of the browser action button"
   }
 }
