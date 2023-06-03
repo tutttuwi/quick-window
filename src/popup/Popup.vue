@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { savedTabList } from '~/logic/storage'
+import { getMessage } from '~/background/i18n'
 
 const parsedSavedTabList = computed<IframeTab[]>(() => {
   const parsedSavedTabList = JSON.parse(savedTabList.value);
@@ -7,7 +8,7 @@ const parsedSavedTabList = computed<IframeTab[]>(() => {
   if (parsedSavedTabList.length === 0) {
     parsedSavedTabList.push({
       uuid: crypto.randomUUID(),
-      title: '新しいタブ',
+      title: getMessage("newTabTitle"),
       url: '',
       active: true
     });
@@ -54,6 +55,7 @@ function fetchIframe(event: any) {
 function iframeReload() {
   const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
   if (inputValue) {
+    document.getElementById("iframe-content").src = inputValue; // インプットで上書き
     document.getElementById("iframe-content").src += ''; // リロードさせる
   }
 }
@@ -72,7 +74,7 @@ function createTab() {
   parsedSavedTabList.value.forEach(tabItem => tabItem.active = false);
   parsedSavedTabList.value.push({
     uuid: crypto.randomUUID(),
-    title: '新しいタブ',
+    title: getMessage("newTabTitle"),
     url: '',
     active: true
   });
@@ -108,7 +110,7 @@ init();
     <div class="tabs-container">
 
       <template v-if="parsedSavedTabList.length > 0">
-        <div class="tab-item-container d-flex">
+        <div class="tab-item-container scroll_bar d-flex">
 
           <template v-for="tab of parsedSavedTabList">
             <div class="tab-item px-2 py-1 d-flex justify-content-between"
@@ -118,6 +120,9 @@ init();
               <div class="cursor-pointer" @click="deleteTab(tab)" v-if="tab.active">
                 <material-symbols:close />
               </div>
+            </div>
+            <div class="d-flex align-items-center item-border-box">
+              <div class="item-border"></div>
             </div>
           </template>
           <div class="tab-plus px-2 py-1 d-flex justify-content-between">

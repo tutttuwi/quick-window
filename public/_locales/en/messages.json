@@ -14,5 +14,8 @@
   "browserActionTitle": {
     "message": "QuickFramer",
     "description": "The title of the browser action button"
+  },
+  "newTabTitle": {
+    "message": "NewTab"
   }
 }

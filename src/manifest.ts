@@ -14,7 +14,7 @@ const getSharedManifest = async () => {
     // name: 'Tab Group Keeper',
     name: pkg.name,
     version: pkg.version,
-    default_locale: 'ja',
+    default_locale: 'en',
     description: pkg.description,
     options_ui: {
       page: './dist/options/index.html',
@@ -25,17 +25,17 @@ const getSharedManifest = async () => {
       48: './assets/icon-256.png',
       128: './assets/icon-256.png',
     },
-    content_scripts: [
-      {
-        matches: ['https://qiita.com/*/items/*'],
-        js: ['./dist/contentScripts/index.global.js'],
-      },
-    ],
-    // content_security_policy: {
-    //   extension_pages: "script-src 'self'; object-src 'self';",
-    //   sandbox:
-    //     "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';",
-    // },
+    // content_scripts: [
+    //   {
+    //     matches: ['https://qiita.com/*/items/*'],
+    //     js: ['./dist/contentScripts/index.global.js'],
+    //   },
+    // ],
+    content_security_policy: {
+      extension_pages: "script-src 'self'; object-src 'self';",
+      sandbox:
+        "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';",
+    },
   };
 
   return manifest;
@@ -48,7 +48,7 @@ export async function getManifest() {
     default_popup: './dist/popup/index.html',
   };
   const permissions = {
-    type: ['tabs', 'storage', 'tabGroups', 'favicon', 'alarms', 'notifications'],
+    type: ['storage'],
     host: ['http://*/', 'https://*/'],
   };
 
