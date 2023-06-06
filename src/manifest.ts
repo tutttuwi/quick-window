@@ -81,7 +81,7 @@ export async function getManifest() {
       service_worker: './dist/background/index.global.js',
     },
     permissions: permissions.type,
-    host_permissions: permissions.host,
+    // host_permissions: permissions.host,
     web_accessible_resources: [
       {
         resources: ['assets/*', 'dist/*'],
