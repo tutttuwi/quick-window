@@ -17,7 +17,6 @@ const parsedSavedTabList = computed<IframeTab[]>(() => {
 });
 
 // const tabList: Ref<Array<IframeTab>> = ref([]);
-const activeUrl: Ref<string> = ref("");
 const activateDate: Ref<Date> = ref(new Date());
 
 
@@ -29,7 +28,7 @@ function fetchIframe(event: any) {
   if (activeTab) {
     activeTab.active = true;
     activeTab.url = fetchUrl;
-    activeTab.title = fetchDomain;
+    activeTab.title = activeTab.title ? activeTab.title : fetchDomain;
     parsedSavedTabList.value.forEach(tabItem => {
       if (tabItem.uuid === activeTab.uuid) {
         tabItem = activeTab;
@@ -93,6 +92,29 @@ function activateTab(e: Event, tab: IframeTab) {
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
 }
 
+async function editTitle(tab: IframeTab) {
+  savedTabList.value = JSON.stringify(parsedSavedTabList.value.map((tabItem) => {
+    if (tabItem.uuid === tab.uuid) {
+      tabItem.isUnderEditTitle = true;
+    }
+    return tabItem;
+  }));
+  let editTitleInput = document.getElementById("tab-title-" + tab.uuid);
+  if (editTitleInput) {
+    await nextTick();
+    editTitleInput.focus();
+  }
+}
+
+function bindTitle(tab: IframeTab) {
+  savedTabList.value = JSON.stringify(parsedSavedTabList.value.map((tabItem) => {
+    if (tabItem.uuid === tab.uuid) {
+      tabItem.isUnderEditTitle = false;
+    }
+    return tabItem;
+  }));
+}
+
 function init() {
   let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
   if (activeTab) {
@@ -114,9 +136,13 @@ init();
 
           <template v-for="tab of parsedSavedTabList">
             <div class="tab-item px-2 py-1 d-flex justify-content-between"
-              :class="tab.active ? 'tab-active' : 'tab-passive'" @click="activateTab($event, tab)">
-              <div class="tab-item-title text-truncate cursor-pointer">{{
+              :class="tab.active ? 'tab-active' : 'tab-passive'" @click="activateTab($event, tab)"
+              @dblclick="editTitle(tab)">
+              <div v-if="!tab.isUnderEditTitle" class="tab-item-title text-truncate cursor-pointer">{{
                 tab.title }}</div>
+              <input :class="tab.isUnderEditTitle ? '' : 'd-none'" class="me-2 tab-title-input" type="text"
+                :id="'tab-title-' + tab.uuid" v-model="tab.title" v-on:keydown.enter="bindTitle(tab)"
+                v-on:blur="bindTitle(tab)">
               <div class="cursor-pointer" @click="deleteTab(tab)" v-if="tab.active">
                 <material-symbols:close />
               </div>
