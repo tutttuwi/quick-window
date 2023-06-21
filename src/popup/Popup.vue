@@ -24,6 +24,9 @@ console.log(parsedSavedTabList);
 function fetchIframe(event: any) {
   const activeTab: IframeTab | undefined = parsedSavedTabList.value.find(tabItem => tabItem.active);
   const fetchUrl: string = event.target.value;
+  if (!fetchUrl) {
+    return; // URLが空なのでリターン、何もしない
+  }
   const fetchDomain = fetchUrl.replaceAll(/http.*?\/\//g, "").replaceAll(/\/.*/g, "");
   if (activeTab) {
     activeTab.active = true;
@@ -151,8 +154,14 @@ init();
             <div class="tab-item px-2 py-1 d-flex justify-content-between"
               :class="tab.active ? 'tab-active' : 'tab-passive'" @click="activateTab($event, tab)"
               @dblclick="editTitle(tab)">
-              <div v-if="!tab.isUnderEditTitle" class="tab-item-title text-truncate cursor-pointer">{{
-                tab.title }}</div>
+              <div class="d-flex align-items-center">
+                <span class="me-1">
+                  <img v-if="tab.url" class="tabs-favicon me-1"
+                    :src="tab.url ? `/_favicon/?pageUrl=${encodeURIComponent(tab.url)}` : ''">
+                </span>
+                <div v-if="!tab.isUnderEditTitle" class="tab-item-title text-truncate cursor-pointer">{{
+                  tab.title }}</div>
+              </div>
               <input :class="tab.isUnderEditTitle ? '' : 'd-none'" class="me-2 tab-title-input" type="text"
                 :id="'tab-title-' + tab.uuid" v-model="tab.title" v-on:keydown.enter="bindTitle(tab)"
                 v-on:blur="bindTitle(tab)">

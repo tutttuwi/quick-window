@@ -48,7 +48,7 @@ export async function getManifest() {
     default_popup: './dist/popup/index.html',
   };
   const permissions = {
-    type: ['storage', 'tabs'],
+    type: ['storage', 'tabs', 'favicon'],
     host: ['http://*/', 'https://*/'],
   };
 
@@ -84,7 +84,7 @@ export async function getManifest() {
     // host_permissions: permissions.host,
     web_accessible_resources: [
       {
-        resources: ['assets/*', 'dist/*'],
+        resources: ['assets/*', 'dist/*', '_favicon/*'],
         matches: ['http://*/*', 'https://*/*'],
       },
     ],
