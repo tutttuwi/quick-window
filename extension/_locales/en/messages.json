@@ -17,5 +17,11 @@
   },
   "newTabTitle": {
     "message": "NewTab"
+  },
+  "reloadText": {
+    "message": "reload"
+  },
+  "openWindowText": {
+    "message": "open popup window"
   }
 }

@@ -58,6 +58,19 @@ function iframeReload() {
     document.getElementById("iframe-content").src += ''; // リロードさせる
   }
 }
+function openWindow() {
+  const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
+  if (inputValue) {
+    chrome.windows.create(
+      {
+        state: "maximized",
+        url: inputValue,
+        type: "popup"
+      }
+    )
+  }
+}
+
 
 function deleteTab(deleteTab: IframeTab) {
   const deletedParsedSavedTabList = parsedSavedTabList.value.filter((tabItem: IframeTab) => tabItem.uuid !== deleteTab.uuid);
@@ -162,8 +175,12 @@ init();
 
       <!-- iframe要素 -->
       <div class="tools-container d-flex flex-row align-items-center px-2 my-2">
-        <div class="iframe-reload cursor-pointer mx-3" @click="iframeReload()">
+        <div class="iframe-reload cursor-pointer mx-2" @click="iframeReload()" :title="getMessage('reloadText')">
           <tabler:reload />
+        </div>
+        <div class="iframe-open-window cursor-pointer ms-2 me-3" @click="openWindow()"
+          :title="getMessage('openWindowText')">
+          <icomoon-free:new-tab />
         </div>
         <div class="iframe-url w-100 align-items-center">
           <ri:chrome-fill class="iframe-favicon" />

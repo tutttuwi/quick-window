@@ -17,5 +17,11 @@
   },
   "newTabTitle": {
     "message": "新しいタブ"
+  },
+  "reloadText": {
+    "message": "リロード"
+  },
+  "openWindowText": {
+    "message": "ポップアップで開く"
   }
 }
