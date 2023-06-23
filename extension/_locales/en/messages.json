@@ -23,5 +23,11 @@
   },
   "openWindowText": {
     "message": "open popup window"
+  },
+  "zoomInText": {
+    "message": "zoom in"
+  },
+  "zoomOutText": {
+    "message": "zoom out"
   }
 }

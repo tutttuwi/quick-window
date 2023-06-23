@@ -23,5 +23,11 @@
   },
   "openWindowText": {
     "message": "ポップアップで開く"
+  },
+  "zoomInText": {
+    "message": "拡大"
+  },
+  "zoomOutText": {
+    "message": "縮小"
   }
 }

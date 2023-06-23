@@ -23,6 +23,7 @@ interface IframeTab {
   uuid: string;
   title: string;
   url: string;
+  scale: float;
   isUnderEditTitle: boolean;
   active: boolean;
 }

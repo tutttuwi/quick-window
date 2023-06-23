@@ -42,6 +42,8 @@ function fetchIframe(event: any) {
     parsedSavedTabList.value.push({
       uuid: crypto.randomUUID(),
       title: fetchDomain,
+      scale: 1,
+      isUnderEditTitle: false,
       url: fetchUrl,
       active: true
     });
@@ -91,6 +93,8 @@ function createTab() {
     uuid: crypto.randomUUID(),
     title: getMessage("newTabTitle"),
     url: '',
+    scale: 1,
+    isUnderEditTitle: false,
     active: true
   });
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
@@ -106,6 +110,7 @@ function activateTab(e: Event, tab: IframeTab) {
     }
   });
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
+  setIframe();
 }
 
 async function editTitle(tab: IframeTab) {
@@ -131,6 +136,42 @@ function bindTitle(tab: IframeTab) {
   }));
 }
 
+function setIframe() {
+  let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
+  const iframeEl = document.querySelector(".iframe-element");
+  const scale = activeTab ? activeTab.scale ? activeTab.scale : 1 : 1;
+  // console.log(scale);
+  // console.log(iframeEl.style);
+  iframeEl.style.transform = `scale(${scale})`;
+  iframeEl.style.transformOrigin = "0px 0px";
+  iframeEl.style.width = `calc(650px / ${scale})`;
+  iframeEl.style.height = `calc(500px / ${scale})`;
+  // console.log(iframeEl.style);
+}
+
+const MAX_ZOOM_IN = 1.4;
+const MAX_ZOOM_OUT = 0.6;
+
+function zoomIn() {
+  const activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
+  if (MAX_ZOOM_IN > activeTab.scale) {
+    return;
+  }
+  activeTab.scale = activeTab.scale + 0.1;
+  savedTabList.value = JSON.stringify(parsedSavedTabList.value);
+  setIframe();
+}
+
+function zoomOut(tab: IframeTab) {
+  const activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
+  if (MAX_ZOOM_OUT < activeTab.scale) {
+    return;
+  }
+  activeTab.scale = activeTab.scale - 0.1;
+  savedTabList.value = JSON.stringify(parsedSavedTabList.value);
+  setIframe();
+}
+
 function init() {
   let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
   if (activeTab) {
@@ -138,9 +179,14 @@ function init() {
   }
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
   activateDate.value = new Date();
-
 }
 init();
+
+// テンプレート初期化後実行処理
+onMounted(() => {
+  setIframe();
+});
+
 </script>
 
 <template>
@@ -187,9 +233,15 @@ init();
         <div class="iframe-reload cursor-pointer mx-2" @click="iframeReload()" :title="getMessage('reloadText')">
           <tabler:reload />
         </div>
-        <div class="iframe-open-window cursor-pointer ms-2 me-3" @click="openWindow()"
+        <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="openWindow()"
           :title="getMessage('openWindowText')">
           <icomoon-free:new-tab />
+        </div>
+        <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="zoomIn()" :title="getMessage('zoomInText')">
+          <ri:zoom-in-line />
+        </div>
+        <div class="iframe-open-window cursor-pointer ms-2 me-3" @click="zoomOut()" :title="getMessage('zoomOutText')">
+          <ri:zoom-out-line />
         </div>
         <div class="iframe-url w-100 align-items-center">
           <ri:chrome-fill class="iframe-favicon" />
@@ -201,8 +253,12 @@ init();
     </div>
 
     <div class="iframe-body" v-if="activateDate.getTime() > 0">
-      <iframe id="iframe-content" class="list-scroll iframe-element" :src="fetchUrl()" frameborder="0" style="border: 0"
-        width="650" height="500"></iframe>
+      <div style="width:650px;height:500px;overflow-x:hidden;">
+        <div style="width:650px;height:500px;overflow:hidden;">
+          <iframe id="iframe-content" class="list-scroll iframe-element" :src="fetchUrl()" frameborder="0"
+            style="border: 0"></iframe>
+        </div>
+      </div>
     </div>
 
   </div>
