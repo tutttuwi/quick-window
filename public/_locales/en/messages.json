@@ -29,5 +29,11 @@
   },
   "zoomOutText": {
     "message": "zoom out"
+  },
+  "zoomInMaxText": {
+    "message": "zoom max value is "
+  },
+  "zoomOutMinText": {
+    "message": "zoom min value is "
   }
 }

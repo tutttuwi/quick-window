@@ -2,17 +2,39 @@
 import { savedTabList } from '~/logic/storage'
 import { getMessage } from '~/background/i18n'
 
+import { Vue3Snackbar } from "vue3-snackbar";
+import { useSnackbar } from "vue3-snackbar";
+const snackbar = useSnackbar();
+
+const iframeScale: Ref<GLfloat> = ref(1.0);
+
+watch(iframeScale, (next, prev) => {
+  const iframeEl = document.querySelector(".iframe-element");
+  console.log("iframeScale : ", iframeScale.value);
+  iframeEl.style.transform = `scale(${iframeScale.value})`;
+  iframeEl.style.transformOrigin = "0px 0px";
+  iframeEl.style.width = `calc(650px / ${iframeScale.value})`;
+  iframeEl.style.height = `calc(500px / ${iframeScale.value})`;
+
+});
+
 const parsedSavedTabList = computed<IframeTab[]>(() => {
+  console.log("savedTabList", savedTabList);
+  console.log("savedTabList.value", savedTabList.value);
   const parsedSavedTabList = JSON.parse(savedTabList.value);
-  console.log(parsedSavedTabList);
+  console.log("computed: ", parsedSavedTabList);
   if (parsedSavedTabList.length === 0) {
     parsedSavedTabList.push({
       uuid: crypto.randomUUID(),
       title: getMessage("newTabTitle"),
       url: '',
+      scale: 1,
       active: true
     });
   }
+  let activeTab = parsedSavedTabList.find((tabItem: any) => tabItem.active);
+  iframeScale.value = activeTab ? activeTab.scale : 1.0;
+
   return parsedSavedTabList;
 });
 
@@ -105,12 +127,12 @@ function activateTab(e: Event, tab: IframeTab) {
   parsedSavedTabList.value.forEach(tabItem => {
     if (tab.uuid === tabItem.uuid) {
       tabItem.active = true;
+      iframeScale.value = tabItem.scale;
     } else {
       tabItem.active = false;
     }
   });
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
-  setIframe();
 }
 
 async function editTitle(tab: IframeTab) {
@@ -136,47 +158,65 @@ function bindTitle(tab: IframeTab) {
   }));
 }
 
-function setIframe() {
-  let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
-  const iframeEl = document.querySelector(".iframe-element");
-  const scale = activeTab ? activeTab.scale ? activeTab.scale : 1 : 1;
-  // console.log(scale);
-  // console.log(iframeEl.style);
-  iframeEl.style.transform = `scale(${scale})`;
-  iframeEl.style.transformOrigin = "0px 0px";
-  iframeEl.style.width = `calc(650px / ${scale})`;
-  iframeEl.style.height = `calc(500px / ${scale})`;
-  // console.log(iframeEl.style);
-}
+// function setIframe() {
+//   if (!parsedSavedTabList.value) return;
+//   console.log("parsedSavedTabList.value", parsedSavedTabList.value);
+//   let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
+//   const iframeEl = document.querySelector(".iframe-element");
+//   console.log("activeTab", activeTab);
+//   const scale = activeTab ? activeTab.scale : 1;
+//   console.log(scale);
+//   console.log(iframeEl.style);
+//   iframeEl.style.transform = `scale(${scale})`;
+//   iframeEl.style.transformOrigin = "0px 0px";
+//   iframeEl.style.width = `calc(650px / ${scale})`;
+//   iframeEl.style.height = `calc(500px / ${scale})`;
+//   console.log(iframeEl.style);
+// }
 
 const MAX_ZOOM_IN = 1.4;
 const MAX_ZOOM_OUT = 0.6;
 
 function zoomIn() {
   const activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
-  if (MAX_ZOOM_IN > activeTab.scale) {
+  if (MAX_ZOOM_IN <= activeTab.scale) {
+    snackbar.add({ type: 'warning', text: getMessage("zoomInMaxText") + (Math.round(activeTab.scale * 100)) + ' %' });
     return;
   }
-  activeTab.scale = activeTab.scale + 0.1;
+  activeTab.scale = ((activeTab.scale * 10) + (0.1 * 10)) / 10;
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
-  setIframe();
+  // alert("change scale : " + activeTab.scale);
+  snackbar.add({ type: 'success', text: Math.round(activeTab.scale * 100) + ' %' });
+  // setIframe();
+  iframeScale.value = activeTab.scale;
 }
 
-function zoomOut(tab: IframeTab) {
+function zoomOut() {
   const activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
-  if (MAX_ZOOM_OUT < activeTab.scale) {
+  if (MAX_ZOOM_OUT >= activeTab.scale) {
+    snackbar.add({ type: 'warning', text: getMessage("zoomOutMinText") + (Math.round(activeTab.scale * 100)) + ' %' });
     return;
   }
-  activeTab.scale = activeTab.scale - 0.1;
+  activeTab.scale = ((activeTab.scale * 10) - (0.1 * 10)) / 10;
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
-  setIframe();
+  // alert("change scale : " + activeTab.scale);
+  snackbar.add({ type: 'success', text: Math.round(activeTab.scale * 100) + ' %' });
+  // setIframe();
+  iframeScale.value = activeTab.scale;
 }
+
+
 
 function init() {
+  // 初期化
+  parsedSavedTabList.value.forEach(tabItem => {
+    tabItem.scale = tabItem.scale ? tabItem.scale : 1;
+  });
   let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
   if (activeTab) {
     parsedSavedTabList.value[0].active = true;
   }
+  console.log(parsedSavedTabList.value);
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
   activateDate.value = new Date();
 }
@@ -184,7 +224,7 @@ init();
 
 // テンプレート初期化後実行処理
 onMounted(() => {
-  setIframe();
+  // setIframe();
 });
 
 </script>
@@ -262,4 +302,5 @@ onMounted(() => {
     </div>
 
   </div>
+  <vue3-snackbar bottom center :duration="1000"></vue3-snackbar>
 </template>
