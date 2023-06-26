@@ -1,7 +1,7 @@
 {
   "name": "__MSG_appName__",
   "displayName": "__MSG_appName__",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "private": true,
   "packageManager": "pnpm@7.29.0",
   "description": "QuickFramer allows you to open another page within the browser.",

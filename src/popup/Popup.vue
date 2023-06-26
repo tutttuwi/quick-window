@@ -35,6 +35,10 @@ const parsedSavedTabList = computed<IframeTab[]>(() => {
   let activeTab = parsedSavedTabList.find((tabItem: any) => tabItem.active);
   iframeScale.value = activeTab ? activeTab.scale : 1.0;
 
+  if (!activeTab) {
+    parsedSavedTabList[parsedSavedTabList.length - 1].active = true;
+  }
+
   return parsedSavedTabList;
 });
 
@@ -127,7 +131,7 @@ function activateTab(e: Event, tab: IframeTab) {
   parsedSavedTabList.value.forEach(tabItem => {
     if (tab.uuid === tabItem.uuid) {
       tabItem.active = true;
-      iframeScale.value = tabItem.scale;
+      iframeScale.value = tabItem.scale ? tabItem.scale : 1; //scaleがない場合はデフォルト設定
     } else {
       tabItem.active = false;
     }
