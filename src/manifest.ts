@@ -25,12 +25,12 @@ const getSharedManifest = async () => {
       48: './assets/icon-256.png',
       128: './assets/icon-256.png',
     },
-    // content_scripts: [
-    //   {
-    //     matches: ['https://qiita.com/*/items/*'],
-    //     js: ['./dist/contentScripts/index.global.js'],
-    //   },
-    // ],
+    content_scripts: [
+      {
+        matches: ['<all_urls>'],
+        js: ['./dist/contentScripts/index.global.js'],
+      },
+    ],
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self';",
       sandbox:
