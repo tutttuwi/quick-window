@@ -41,6 +41,8 @@ function resize(e: any) {
   container.style.background = 'red';
   container.style.top = '0px';
   container.style.right = '0px';
+  container.style.zIndex = '1000';
+
   const splitBarEl = document.createElement('div');
   splitBarEl.style.width = '10px';
   splitBarEl.style.height = '100%';
