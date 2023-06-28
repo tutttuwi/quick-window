@@ -3,22 +3,6 @@
 import 'uno.css'
 import '../style.css'
 
-// const [show, toggle] = useToggle(false)
-const isShow = ref<ValueOf<typeof Boolean>>(true);
-
-function getAccountProfileUrl() {
-  return window.location.href.replaceAll(/\/items\/.*/g, "");
-}
-
-function showToggle(e: Event) {
-  e.stopPropagation();
-  isShow.value = !isShow.value;
-}
-
-function closeWindow() {
-  isShow.value = false;
-}
-
 </script>
 
 <template>

@@ -63,17 +63,19 @@ function resize(e: any) {
   container.style.position = 'fixed';
   container.style.width = '300px';
   container.style.height = '100%';
-  container.style.background = 'red';
+  container.style.background = 'white';
   container.style.top = '0px';
   container.style.right = '0px';
   container.style.zIndex = '1000';
+  container.style.fontSize = '16px';
 
   const splitBarEl = document.createElement('div');
-  splitBarEl.style.width = '10px';
+  splitBarEl.style.minWidth = '10px';
   splitBarEl.style.height = '100%';
-  splitBarEl.style.background = 'blue';
+  splitBarEl.style.background = 'grey';
   splitBarEl.style.cursor = 'col-resize';
   const shadowEl = document.createElement('div');
+  shadowEl.style.width = '100%';
   const root = document.createElement('div');
   const styleEl = document.createElement('link');
   // const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container;
