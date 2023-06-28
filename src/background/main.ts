@@ -53,3 +53,33 @@ onMessage('get-current-tab', async () => {
     };
   }
 });
+
+async function getCurrentTab() {
+  let queryOptions = { active: true, currentWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab;
+}
+
+async function toggleSideWindow() {
+  getCurrentTab().then((tab) => {
+    console.log(tab);
+    sendMessage('TOGGLE_SIDE_WINDOW', {}, { context: 'content-script', tabId: tab.id || 0 });
+  });
+}
+const showWindowProperties: chrome.contextMenus.CreateProperties = {
+  id: 'TOGGLE_SIDE_WINDOW',
+  title: getMessage('toggleShowSideWindow'),
+  type: 'normal',
+  contexts: ['all'],
+};
+chrome.contextMenus.create(showWindowProperties);
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  switch (info.menuItemId) {
+    case 'TOGGLE_SIDE_WINDOW':
+      toggleSideWindow();
+      break;
+    default:
+      break;
+  }
+});

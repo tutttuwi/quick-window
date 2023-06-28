@@ -1,17 +1,28 @@
 import { onMessage } from 'webext-bridge';
 import { createApp } from 'vue';
 import App from './views/App.vue';
+import PopupApp from '../popup/Popup.vue';
+import '../styles';
 import { setupApp } from '~/logic/common-setup';
+import { SnackbarService } from 'vue3-snackbar';
+import 'vue3-snackbar/styles';
 
-const iframeContainerWidth = ref<number>(0);
-const showIframeContainer = ref<boolean>(true);
+// const iframeContainerWidth = ref<number>(0);
+// const showIframeContainer = ref<boolean>(true);
 
+let iframeContainerWidth = 0;
+let showIframeContainer = true;
+let defaultBodyWidth = document.body.style.width;
+const defaultSideWindowWidth = 300;
 function resizeWindow() {
-  document.body.style.width = `${window.innerWidth - (300 + 300 * 0.1)}px`;
+  document.body.style.width = `${
+    window.innerWidth - (defaultSideWindowWidth + defaultSideWindowWidth * 0.1)
+  }px`;
   // document.body.style.margin = '0px';
 }
 
 function resize(e: any) {
+  iframeContainerWidth = e.x;
   const size = `${window.innerWidth - e.x - 8}`; // 8 = スプリッタの幅の半分
   document.getElementById('quick-framer-container').style.width = `${size}px`;
   console.log('size', size);
@@ -29,6 +40,20 @@ function resize(e: any) {
   // communication example: send previous tab title from background page
   onMessage('tab-prev', ({ data }) => {
     console.log(`[vitesse-webext] Navigate from page "${data.title}"`);
+  });
+
+  //
+  onMessage('TOGGLE_SIDE_WINDOW', ({ data }) => {
+    showIframeContainer = !showIframeContainer;
+    document.getElementById('quick-framer-container').style.display = showIframeContainer
+      ? 'block'
+      : 'none';
+    if (!showIframeContainer) {
+      document.body.style.width = defaultBodyWidth ? defaultBodyWidth : '';
+    } else {
+      const size = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
+      document.body.style.width = `${window.innerWidth - size}px`;
+    }
   });
 
   // mount component to context window
@@ -77,7 +102,8 @@ function resize(e: any) {
   });
 
   document.body.appendChild(container);
-  const app = createApp(App);
-  setupApp(app);
-  app.mount(root);
+  const popupApp = createApp(PopupApp);
+  setupApp(popupApp);
+  popupApp.use(SnackbarService);
+  popupApp.mount(root);
 })();

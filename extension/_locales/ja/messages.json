@@ -35,5 +35,8 @@
   },
   "zoomOutMinText": {
     "message": "最小の縮小値です : "
+  },
+  "toggleShowSideWindow": {
+    "message": "サイドウィンドウの表示/非表示"
   }
 }
