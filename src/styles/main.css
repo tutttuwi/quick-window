@@ -115,6 +115,10 @@ body,
   height: calc(500px / 0.6); */
 }
 
+.iframe-body {
+  flex-grow: 1;
+}
+
 /* 
 .iframe-url::before {
   content: attr(data-item);
@@ -132,3 +136,9 @@ body,
   position: relative;
   left: 40px;
 } */
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
