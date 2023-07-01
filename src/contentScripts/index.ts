@@ -77,6 +77,7 @@ function resize(e: any) {
   const shadowEl = document.createElement('div');
   shadowEl.style.width = '100%';
   const root = document.createElement('div');
+  root.style.height = '100%';
   const styleEl = document.createElement('link');
   // const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container;
   const shadowDOM = shadowEl.attachShadow?.({ mode: 'open' }) || shadowEl;

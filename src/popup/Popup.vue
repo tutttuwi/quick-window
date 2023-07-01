@@ -300,7 +300,7 @@ onMounted(() => {
       <div style="width:100%;height:100%;overflow-x:hidden;">
         <div style="width:100%;height:100%;overflow:hidden;">
           <iframe id="iframe-content" class="list-scroll iframe-element" :src="fetchUrl()" frameborder="0"
-            style="border: 0"></iframe>
+            style="border: 0;width:100%;height:100%;"></iframe>
         </div>
       </div>
     </div>
