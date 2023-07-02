@@ -6,6 +6,10 @@ import '../styles';
 import { setupApp } from '~/logic/common-setup';
 import { SnackbarService } from 'vue3-snackbar';
 import 'vue3-snackbar/styles';
+import 'bootstrap';
+import { Dropdown } from 'bootstrap';
+import 'popper.js';
+import Popper from 'popper.js';
 
 // const iframeContainerWidth = ref<number>(0);
 // const showIframeContainer = ref<boolean>(true);
@@ -76,6 +80,7 @@ function resize(e: any) {
   splitBarEl.style.cursor = 'col-resize';
   const shadowEl = document.createElement('div');
   shadowEl.style.width = '100%';
+  shadowEl.id = 'iframe-content-shadow';
   const root = document.createElement('div');
   root.style.height = '100%';
   const styleEl = document.createElement('link');
@@ -83,8 +88,13 @@ function resize(e: any) {
   const shadowDOM = shadowEl.attachShadow?.({ mode: 'open' }) || shadowEl;
   styleEl.setAttribute('rel', 'stylesheet');
   styleEl.setAttribute('href', browser.runtime.getURL('dist/contentScripts/style.css'));
+  // const scriptEl = document.createElement('script');
+  // scriptEl.setAttribute('src', browser.runtime.getURL('dist/contentScripts/index.global.js'));
+  // scriptEl.setAttribute('async', '');
   shadowDOM.appendChild(styleEl);
   shadowDOM.appendChild(root);
+  // shadowDOM.appendChild(scriptEl);
+  // new Dropdown(shadowDOM.querySelector('#zoomRatio'));
 
   container.appendChild(splitBarEl);
   container.appendChild(shadowEl);
@@ -109,4 +119,9 @@ function resize(e: any) {
   setupApp(popupApp);
   popupApp.use(SnackbarService);
   popupApp.mount(root);
+
+  // setTimeout(() => {
+  //   const shadowElFetched = document.querySelector('#iframe-content-shadow');
+  //   new Dropdown(shadowElFetched?.getElementsByClassName('zoomRatio')[0]);
+  // }, 1000);
 })();

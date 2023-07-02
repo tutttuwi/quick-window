@@ -4,17 +4,21 @@ import { getMessage } from '~/background/i18n'
 
 import { Vue3Snackbar } from "vue3-snackbar";
 import { useSnackbar } from "vue3-snackbar";
+import 'bootstrap'
+import 'popper.js'
+
 const snackbar = useSnackbar();
 
 const iframeScale: Ref<GLfloat> = ref(1.0);
 
 watch(iframeScale, (next, prev) => {
-  const iframeEl = document.querySelector(".iframe-element");
+  const shadowEl = document.querySelector("#iframe-content-shadow");
+  const iframeEl = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-element") : document.querySelector(".iframe-element");
   console.log("iframeScale : ", iframeScale.value);
   iframeEl.style.transform = `scale(${iframeScale.value})`;
   iframeEl.style.transformOrigin = "0px 0px";
-  iframeEl.style.width = `calc(650px / ${iframeScale.value})`;
-  iframeEl.style.height = `calc(500px / ${iframeScale.value})`;
+  iframeEl.style.width = `calc(100% / ${iframeScale.value})`;
+  iframeEl.style.height = `calc(100% / ${iframeScale.value})`;
 
 });
 
@@ -209,7 +213,13 @@ function zoomOut() {
   iframeScale.value = activeTab.scale;
 }
 
-
+function getTabScale() {
+  const activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
+  if (activeTab) {
+    return ((activeTab?.scale * 10) * 100) / 10;
+  }
+  return 1 * 100;
+}
 
 function init() {
   // 初期化
@@ -284,8 +294,11 @@ onMounted(() => {
         <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="zoomIn()" :title="getMessage('zoomInText')">
           <ri:zoom-in-line />
         </div>
-        <div class="iframe-open-window cursor-pointer ms-2 me-3" @click="zoomOut()" :title="getMessage('zoomOutText')">
+        <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="zoomOut()" :title="getMessage('zoomOutText')">
           <ri:zoom-out-line />
+        </div>
+        <div id="zoomScale" class="zoomScale ms-2 me-3">
+          {{ getTabScale() + '%' }}
         </div>
         <div class="iframe-url w-100 align-items-center">
           <ri:chrome-fill class="iframe-favicon" />

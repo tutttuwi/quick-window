@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storageDemo } from '~/logic/storage'
 import 'bootstrap'
+import 'popper.js'
 </script>
 
 <template>
