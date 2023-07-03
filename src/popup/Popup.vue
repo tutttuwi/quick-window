@@ -143,6 +143,10 @@ function activateTab(e: Event, tab: IframeTab) {
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
 }
 
+function getExtensionPath(path: string) {
+  return chrome.runtime.getURL(path);
+}
+
 async function editTitle(tab: IframeTab) {
   savedTabList.value = JSON.stringify(parsedSavedTabList.value.map((tabItem) => {
     if (tabItem.uuid === tab.uuid) {
@@ -257,7 +261,7 @@ onMounted(() => {
               <div class="d-flex align-items-center">
                 <span class="me-1">
                   <img v-if="tab.url" class="tabs-favicon me-1"
-                    :src="tab.url ? `/_favicon/?pageUrl=${encodeURIComponent(tab.url)}` : ''">
+                    :src="tab.url ? getExtensionPath(`/_favicon/?pageUrl=${encodeURIComponent(tab.url)}`) : ''">
                 </span>
                 <div v-if="!tab.isUnderEditTitle" class="tab-item-title text-truncate cursor-pointer">{{
                   tab.title }}</div>
