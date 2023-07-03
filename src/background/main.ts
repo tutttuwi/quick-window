@@ -66,20 +66,26 @@ async function toggleSideWindow() {
     sendMessage('TOGGLE_SIDE_WINDOW', {}, { context: 'content-script', tabId: tab.id || 0 });
   });
 }
+
 const showWindowProperties: chrome.contextMenus.CreateProperties = {
   id: 'TOGGLE_SIDE_WINDOW',
   title: getMessage('toggleShowSideWindow'),
   type: 'normal',
   contexts: ['all'],
 };
-chrome.contextMenus.create(showWindowProperties);
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  switch (info.menuItemId) {
-    case 'TOGGLE_SIDE_WINDOW':
-      toggleSideWindow();
-      break;
-    default:
-      break;
-  }
+/**
+ * インストール・更新時に実行
+ */
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create(showWindowProperties);
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    switch (info.menuItemId) {
+      case 'TOGGLE_SIDE_WINDOW':
+        toggleSideWindow();
+        break;
+      default:
+        break;
+    }
+  });
 });
