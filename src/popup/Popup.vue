@@ -78,11 +78,13 @@ function fetchIframe(event: any) {
       active: true
     });
   }
+  const shadowEl = document.querySelector("#iframe-content-shadow");
+  const iframeEl = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-element") : document.querySelector(".iframe-element");
+  iframeEl.src += ''; // リロードさせる
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
   // activateDate.value = new Date();
   // nextTick(() => activateDate.value = new Date());
   // document.getElementById('iframeID').src += '';
-  document.getElementById("iframe-content").src += ''; // リロードさせる
   // document.getElementsByClassName(".iframe-element").item(0).src = "";
 }
 
@@ -140,6 +142,9 @@ function activateTab(e: Event, tab: IframeTab) {
       tabItem.active = false;
     }
   });
+  const shadowEl = document.querySelector("#iframe-content-shadow");
+  const iframeEl = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-element") : document.querySelector(".iframe-element");
+  iframeEl.src += ''; // リロードさせる
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
 }
 
@@ -313,7 +318,7 @@ onMounted(() => {
 
     </div>
 
-    <div class="iframe-body" v-if="activateDate.getTime() > 0">
+    <div class="iframe-body m-1" v-if="activateDate.getTime() > 0">
       <div style="width:100%;height:100%;overflow-x:hidden;">
         <div style="width:100%;height:100%;overflow:hidden;">
           <iframe id="iframe-content" class="list-scroll iframe-element" :src="fetchUrl()" frameborder="0"
