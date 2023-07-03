@@ -50,7 +50,7 @@ function resize(e: any) {
   onMessage('TOGGLE_SIDE_WINDOW', ({ data }) => {
     showIframeContainer = !showIframeContainer;
     document.getElementById('quick-framer-container').style.display = showIframeContainer
-      ? 'block'
+      ? 'flex'
       : 'none';
     if (!showIframeContainer) {
       document.body.style.width = defaultBodyWidth ? defaultBodyWidth : '';
@@ -63,6 +63,7 @@ function resize(e: any) {
   // mount component to context window
   const container = document.createElement('div');
   container.id = 'quick-framer-container';
+  container.style.zIndex = '2147483647'; //2147483647
   container.style.display = 'flex';
   container.style.position = 'fixed';
   container.style.width = '300px';
@@ -70,7 +71,6 @@ function resize(e: any) {
   container.style.background = 'white';
   container.style.top = '0px';
   container.style.right = '0px';
-  container.style.zIndex = '1000';
   container.style.fontSize = '16px';
 
   const splitBarEl = document.createElement('div');
