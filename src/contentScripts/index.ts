@@ -14,13 +14,14 @@ import Popper from 'popper.js';
 // const iframeContainerWidth = ref<number>(0);
 // const showIframeContainer = ref<boolean>(true);
 
-let iframeContainerWidth = 0;
-let showIframeContainer = true;
+let iframeContainerWidth = 500;
+let showIframeContainer = false;
 let defaultBodyWidth = document.body.style.width;
-const defaultSideWindowWidth = 300;
+// const defaultSideWindowWidth = 300;
 function resizeWindow() {
   document.body.style.width = `${
-    window.innerWidth - (defaultSideWindowWidth + defaultSideWindowWidth * 0.1)
+    window.innerWidth - (iframeContainerWidth + iframeContainerWidth * 0.1)
+    // window.innerWidth - (window.innerWidth - iframeContainerWidth)
   }px`;
   // document.body.style.margin = '0px';
 }
@@ -48,6 +49,9 @@ function resize(e: any) {
 
   //
   onMessage('TOGGLE_SIDE_WINDOW', ({ data }) => {
+    console.log('showIframeContainer', showIframeContainer);
+    console.log('window.innerWidth', window.innerWidth);
+    console.log('iframeContainerWidth', iframeContainerWidth);
     showIframeContainer = !showIframeContainer;
     document.getElementById('quick-framer-container').style.display = showIframeContainer
       ? 'flex'
@@ -55,18 +59,19 @@ function resize(e: any) {
     if (!showIframeContainer) {
       document.body.style.width = defaultBodyWidth ? defaultBodyWidth : '';
     } else {
-      const size = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
+      const size: any = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
       document.body.style.width = `${window.innerWidth - size}px`;
     }
+    console.log('document.body.style.width', document.body.style.width);
   });
 
   // mount component to context window
   const container = document.createElement('div');
   container.id = 'quick-framer-container';
   container.style.zIndex = '2147483647'; //2147483647
-  container.style.display = 'flex';
+  container.style.display = 'none';
   container.style.position = 'fixed';
-  container.style.width = '300px';
+  container.style.width = '500px';
   container.style.height = '100%';
   container.style.background = 'white';
   container.style.top = '0px';
@@ -101,7 +106,7 @@ function resize(e: any) {
 
   // change body width
   window.onresize = resizeWindow;
-  resizeWindow();
+  // resizeWindow();
 
   splitBarEl.addEventListener('mousedown', (event) => {
     document.addEventListener('mousemove', resize, false);
