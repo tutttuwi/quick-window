@@ -19,11 +19,16 @@ let showIframeContainer = false;
 let defaultBodyWidth = document.body.style.width;
 // const defaultSideWindowWidth = 300;
 function resizeWindow() {
-  document.body.style.width = `${
-    window.innerWidth - (iframeContainerWidth + iframeContainerWidth * 0.1)
-    // window.innerWidth - (window.innerWidth - iframeContainerWidth)
-  }px`;
+  if (!showIframeContainer) {
+    return; // iFrameコンテナが表示されてなかったらサイズ変更しない
+  }
+  // document.body.style.width = `${
+  //   window.innerWidth - (iframeContainerWidth + iframeContainerWidth * 0.1)
+  //   // window.innerWidth - (window.innerWidth - iframeContainerWidth)
+  // }px`;
   // document.body.style.margin = '0px';
+  const size: any = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
+  document.body.style.width = `${size}px`;
 }
 
 function resize(e: any) {
@@ -60,7 +65,7 @@ function resize(e: any) {
       document.body.style.width = defaultBodyWidth ? defaultBodyWidth : '';
     } else {
       const size: any = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
-      document.body.style.width = `${window.innerWidth - size}px`;
+      document.body.style.width = `${size}px`;
     }
     console.log('document.body.style.width', document.body.style.width);
   });

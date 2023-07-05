@@ -62,10 +62,9 @@ async function getCurrentTab() {
 
 async function toggleSideWindow() {
   console.log('toggleSideWindow() START');
-  getCurrentTab().then((tab) => {
-    console.log(tab);
-    sendMessage('TOGGLE_SIDE_WINDOW', {}, { context: 'content-script', tabId: tab.id || 0 });
-  });
+  const tab = await getCurrentTab();
+  console.log(tab);
+  sendMessage('TOGGLE_SIDE_WINDOW', {}, { context: 'content-script', tabId: tab.id || 0 });
   console.log('toggleSideWindow() END');
 }
 
@@ -81,13 +80,13 @@ const showWindowProperties: chrome.contextMenus.CreateProperties = {
  */
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create(showWindowProperties);
-  chrome.contextMenus.onClicked.addListener((info, tab) => {
-    switch (info.menuItemId) {
-      case 'TOGGLE_SIDE_WINDOW':
-        toggleSideWindow();
-        break;
-      default:
-        break;
-    }
-  });
+});
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  switch (info.menuItemId) {
+    case 'TOGGLE_SIDE_WINDOW':
+      toggleSideWindow();
+      break;
+    default:
+      break;
+  }
 });
