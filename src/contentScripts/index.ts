@@ -31,10 +31,37 @@ function resizeWindow() {
   document.body.style.width = `${size}px`;
 }
 
+function toggleShadowCover(showCoverEl: boolean) {
+  const shadowContainerEl = document.getElementById('iframe-content-shadow-cover');
+  if (showCoverEl && shadowContainerEl) {
+    return;
+  }
+
+  if (showCoverEl && !shadowContainerEl) {
+    const shadowCoverEl = document.createElement('div');
+    shadowCoverEl.id = 'iframe-content-shadow-cover';
+    shadowCoverEl.style.position = 'absolute';
+    shadowCoverEl.style.top = '0px';
+    shadowCoverEl.style.left = '0px';
+    shadowCoverEl.style.width = '100%';
+    shadowCoverEl.style.height = '100%';
+    const shadowContainerEl = document.getElementById('iframe-content-shadow-container');
+    shadowContainerEl?.appendChild(shadowCoverEl);
+  } else {
+    const shadowContainerEl = document.getElementById('iframe-content-shadow-cover');
+    if (shadowContainerEl) {
+      shadowContainerEl.remove();
+    }
+  }
+}
+
 function resize(e: any) {
+  const shadowCoverEl = document.getElementById('iframe-content-shadow-cover');
+  shadowCoverEl.style.display = 'block';
+  const containerEl = document.getElementById('quick-framer-container');
   iframeContainerWidth = e.x;
   const size = `${window.innerWidth - e.x - 8}`; // 8 = スプリッタの幅の半分
-  document.getElementById('quick-framer-container').style.width = `${size}px`;
+  containerEl.style.width = `${size}px`;
   console.log('size', size);
   console.log(
     '`${window.innerWidth - (size + size * 0.1)}px`',
@@ -82,20 +109,30 @@ function resize(e: any) {
   container.style.top = '0px';
   container.style.right = '0px';
   container.style.fontSize = '16px';
+  container.style.color = '#333';
 
   const splitBarEl = document.createElement('div');
   splitBarEl.style.minWidth = '10px';
   splitBarEl.style.height = '100%';
   splitBarEl.style.background = 'grey';
   splitBarEl.style.cursor = 'col-resize';
+  const shadowContainerEl = document.createElement('div');
+  shadowContainerEl.id = 'iframe-content-shadow-container';
+  shadowContainerEl.style.width = '100%';
+  shadowContainerEl.style.height = '100%';
+  shadowContainerEl.style.position = 'relative';
+
   const shadowEl = document.createElement('div');
   shadowEl.style.width = '100%';
+  shadowEl.style.height = '100%';
   shadowEl.id = 'iframe-content-shadow';
   const root = document.createElement('div');
   root.style.height = '100%';
   const styleEl = document.createElement('link');
   // const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container;
   const shadowDOM = shadowEl.attachShadow?.({ mode: 'open' }) || shadowEl;
+  shadowContainerEl.appendChild(shadowEl);
+
   styleEl.setAttribute('rel', 'stylesheet');
   styleEl.setAttribute('href', browser.runtime.getURL('dist/contentScripts/style.css'));
   // const scriptEl = document.createElement('script');
@@ -107,18 +144,25 @@ function resize(e: any) {
   // new Dropdown(shadowDOM.querySelector('#zoomRatio'));
 
   container.appendChild(splitBarEl);
-  container.appendChild(shadowEl);
+  container.appendChild(shadowContainerEl);
 
   // change body width
   window.onresize = resizeWindow;
   // resizeWindow();
 
   splitBarEl.addEventListener('mousedown', (event) => {
+    toggleShadowCover(true);
     document.addEventListener('mousemove', resize, false);
-    document.addEventListener(
+    splitBarEl.addEventListener(
       'mouseup',
       () => {
         document.removeEventListener('mousemove', resize, false);
+        // const shadowCoverEl = document.getElementById('iframe-content-shadow-cover');
+        // shadowCoverEl.style.display = 'none';
+        toggleShadowCover(false);
+        if (window.getSelection) {
+          window.getSelection().removeAllRanges();
+        }
       },
       false
     );
