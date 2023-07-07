@@ -114,7 +114,10 @@ function resize(e: any) {
   const splitBarEl = document.createElement('div');
   splitBarEl.style.minWidth = '10px';
   splitBarEl.style.height = '100%';
-  splitBarEl.style.background = 'grey';
+  splitBarEl.style.background = '#ccc';
+  splitBarEl.style.backgroundImage = `url(${chrome.runtime.getURL('../assets/drag.svg')})`;
+  splitBarEl.style.backgroundPosition = 'center';
+  splitBarEl.style.backgroundRepeat = 'no-repeat';
   splitBarEl.style.cursor = 'col-resize';
   const shadowContainerEl = document.createElement('div');
   shadowContainerEl.id = 'iframe-content-shadow-container';
