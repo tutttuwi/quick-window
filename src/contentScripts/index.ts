@@ -171,7 +171,7 @@ function resize(e: any) {
     );
   });
 
-  document.body.appendChild(container);
+  document.body.after(container);
   const popupApp = createApp(PopupApp);
   setupApp(popupApp);
   popupApp.use(SnackbarService);
