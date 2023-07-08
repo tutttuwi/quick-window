@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { sendMessage } from 'webext-bridge';
 import { savedTabList } from '~/logic/storage'
 import { getMessage } from '~/background/i18n'
 
@@ -89,15 +90,26 @@ function fetchIframe(event: any) {
 }
 
 function iframeReload() {
-  const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
-  if (inputValue) {
+  const shadowEl = document.querySelector("#iframe-content-shadow");
+  const inputValue = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-input-url").value : document.querySelector(".iframe-input-url").value;
+  // const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
+  if (inputValue && shadowEl) {
+    shadowEl.shadowRoot.getElementById("iframe-content").src = inputValue; // インプットで上書き
+    shadowEl.shadowRoot.getElementById("iframe-content").src += ''; // リロードさせる
+  } else if (inputValue) {
     document.getElementById("iframe-content").src = inputValue; // インプットで上書き
     document.getElementById("iframe-content").src += ''; // リロードさせる
+
   }
 }
 function openWindow() {
-  const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
-  if (inputValue) {
+  const shadowEl = document.querySelector("#iframe-content-shadow");
+  const inputValue = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-input-url").value : document.querySelector(".iframe-input-url").value;
+  // const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
+  if (inputValue && shadowEl) {
+    // TODO: ポップアップウィンドウ表示の実装 バックグラウンドJS側で開かなければならない
+    // sendMessage('TOGGLE_SIDE_WINDOW', {}, { context: 'content-script'});
+  } else if (inputValue) {
     chrome.windows.create(
       {
         state: "maximized",
