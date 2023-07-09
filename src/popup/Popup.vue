@@ -247,10 +247,6 @@ function init() {
   parsedSavedTabList.value.forEach(tabItem => {
     tabItem.scale = tabItem.scale ? tabItem.scale : 1;
   });
-  let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
-  if (activeTab) {
-    parsedSavedTabList.value[0].active = true;
-  }
   console.log(parsedSavedTabList.value);
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
   activateDate.value = new Date();
@@ -260,6 +256,10 @@ init();
 // テンプレート初期化後実行処理
 onMounted(() => {
   // setIframe();
+  // let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
+  // if (activeTab) {
+  //   parsedSavedTabList.value[0].active = true;
+  // }
 });
 
 </script>

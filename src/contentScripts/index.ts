@@ -37,7 +37,9 @@ function toggleShadowCover(showCoverEl: boolean) {
     return;
   }
 
+  console.log('showCoverEl', showCoverEl);
   if (showCoverEl && !shadowContainerEl) {
+    // mountSideWindow();
     const shadowCoverEl = document.createElement('div');
     shadowCoverEl.id = 'iframe-content-shadow-cover';
     shadowCoverEl.style.position = 'absolute';
@@ -48,6 +50,7 @@ function toggleShadowCover(showCoverEl: boolean) {
     const shadowContainerEl = document.getElementById('iframe-content-shadow-container');
     shadowContainerEl?.appendChild(shadowCoverEl);
   } else {
+    // removeSideWindow();
     const shadowContainerEl = document.getElementById('iframe-content-shadow-cover');
     if (shadowContainerEl) {
       shadowContainerEl.remove();
@@ -70,46 +73,25 @@ function resize(e: any) {
   document.body.style.width = `${window.innerWidth - size}px`;
 }
 
-// Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
-(() => {
-  console.info('[vitesse-webext] Hello world from content script');
+function removeSideWindow() {
+  console.log('removeSideWindow() START');
+  const container = document.querySelector('#quick-framer-container');
+  if (!container) {
+    console.log('container is null!!');
+    return;
+  }
+  container.innerHTML = '';
+  console.log('removeSideWindow() END');
+}
 
-  // communication example: send previous tab title from background page
-  onMessage('tab-prev', ({ data }) => {
-    console.log(`[vitesse-webext] Navigate from page "${data.title}"`);
-  });
+function mountSideWindow() {
+  console.log('mountSideWindow() START');
 
-  //
-  onMessage('TOGGLE_SIDE_WINDOW', ({ data }) => {
-    console.log('showIframeContainer', showIframeContainer);
-    console.log('window.innerWidth', window.innerWidth);
-    console.log('iframeContainerWidth', iframeContainerWidth);
-    showIframeContainer = !showIframeContainer;
-    document.getElementById('quick-framer-container').style.display = showIframeContainer
-      ? 'flex'
-      : 'none';
-    if (!showIframeContainer) {
-      document.body.style.width = defaultBodyWidth ? defaultBodyWidth : '';
-    } else {
-      const size: any = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
-      document.body.style.width = `${size}px`;
-    }
-    console.log('document.body.style.width', document.body.style.width);
-  });
-
-  // mount component to context window
-  const container = document.createElement('div');
-  container.id = 'quick-framer-container';
-  container.style.zIndex = '2147483647'; //2147483647
-  container.style.display = 'none';
-  container.style.position = 'fixed';
-  container.style.width = '500px';
-  container.style.height = '100%';
-  container.style.background = 'white';
-  container.style.top = '0px';
-  container.style.right = '0px';
-  container.style.fontSize = '16px';
-  container.style.color = '#333';
+  const container = document.querySelector('#quick-framer-container');
+  if (!container) {
+    console.log('container is null!!');
+    return;
+  }
 
   const splitBarEl = document.createElement('div');
   splitBarEl.style.minWidth = '10px';
@@ -171,7 +153,6 @@ function resize(e: any) {
     );
   });
 
-  document.body.after(container);
   const popupApp = createApp(PopupApp);
   setupApp(popupApp);
   popupApp.use(SnackbarService);
@@ -181,4 +162,51 @@ function resize(e: any) {
   //   const shadowElFetched = document.querySelector('#iframe-content-shadow');
   //   new Dropdown(shadowElFetched?.getElementsByClassName('zoomRatio')[0]);
   // }, 1000);
+  console.log('mountSideWindow() END');
+}
+
+// Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
+(() => {
+  console.info('[vitesse-webext] Hello world from content script');
+
+  // communication example: send previous tab title from background page
+  onMessage('tab-prev', ({ data }) => {
+    console.log(`[vitesse-webext] Navigate from page "${data.title}"`);
+  });
+
+  //
+  onMessage('TOGGLE_SIDE_WINDOW', ({ data }) => {
+    console.log('showIframeContainer', showIframeContainer);
+    console.log('window.innerWidth', window.innerWidth);
+    console.log('iframeContainerWidth', iframeContainerWidth);
+    showIframeContainer = !showIframeContainer;
+    document.getElementById('quick-framer-container').style.display = showIframeContainer
+      ? 'flex'
+      : 'none';
+    if (!showIframeContainer) {
+      removeSideWindow();
+      document.body.style.width = defaultBodyWidth ? defaultBodyWidth : '';
+    } else {
+      mountSideWindow();
+      const size: any = `${window.innerWidth - iframeContainerWidth - 8}`; // 8 = スプリッタの幅の半分
+      document.body.style.width = `${size}px`;
+    }
+    console.log('document.body.style.width', document.body.style.width);
+  });
+
+  // mount component to context window
+  const container = document.createElement('div');
+  container.id = 'quick-framer-container';
+  container.style.zIndex = '2147483647'; //2147483647
+  container.style.display = 'none';
+  container.style.position = 'fixed';
+  container.style.width = '500px';
+  container.style.height = '100%';
+  container.style.background = 'white';
+  container.style.top = '0px';
+  container.style.right = '0px';
+  container.style.fontSize = '16px';
+  container.style.color = '#333';
+
+  document.body.after(container);
 })();
