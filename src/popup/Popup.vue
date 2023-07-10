@@ -32,7 +32,7 @@ const parsedSavedTabList = computed<IframeTab[]>(() => {
     parsedSavedTabList.push({
       uuid: crypto.randomUUID(),
       title: getMessage("newTabTitle"),
-      url: '',
+      url: 'about:blank',
       scale: 1,
       active: true
     });
@@ -128,7 +128,7 @@ function deleteTab(deleteTab: IframeTab) {
 
 function fetchUrl() {
   let activeTab = parsedSavedTabList.value.find(tabItem => tabItem.active);
-  return activeTab ? activeTab.url : '';
+  return activeTab ? activeTab.url : 'about:blank';
 }
 
 function createTab() {
@@ -156,7 +156,9 @@ function activateTab(e: Event, tab: IframeTab) {
   });
   const shadowEl = document.querySelector("#iframe-content-shadow");
   const iframeEl = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-element") : document.querySelector(".iframe-element");
-  iframeEl.src += ''; // リロードさせる
+  if (iframeEl.src !== "about:blank" && !iframeEl.src) {
+    iframeEl.src += ''; // リロードさせる
+  }
   savedTabList.value = JSON.stringify(parsedSavedTabList.value);
 }
 
