@@ -54,6 +54,21 @@ onMessage('get-current-tab', async () => {
   }
 });
 
+onMessage('SHOW_POPUP_WINDOW', async (onObj) => {
+  console.log('onObj', onObj);
+  try {
+    chrome.windows.create({
+      state: 'maximized',
+      url: onObj.data.url,
+      type: 'popup',
+    });
+  } catch {
+    return {
+      title: undefined,
+    };
+  }
+});
+
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);

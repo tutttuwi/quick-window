@@ -108,7 +108,7 @@ function openWindow() {
   // const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
   if (inputValue && shadowEl) {
     // TODO: ポップアップウィンドウ表示の実装 バックグラウンドJS側で開かなければならない
-    // sendMessage('TOGGLE_SIDE_WINDOW', {}, { context: 'content-script'});
+    sendMessage('SHOW_POPUP_WINDOW', { url: inputValue });
   } else if (inputValue) {
     chrome.windows.create(
       {
