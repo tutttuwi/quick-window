@@ -94,7 +94,7 @@ function mountSideWindow() {
   }
 
   const splitBarEl = document.createElement('div');
-  splitBarEl.style.minWidth = '10px';
+  splitBarEl.style.minWidth = '16px';
   splitBarEl.style.height = '100%';
   splitBarEl.style.background = '#ccc';
   splitBarEl.style.backgroundImage = `url(${chrome.runtime.getURL('../assets/drag.svg')})`;
@@ -138,10 +138,14 @@ function mountSideWindow() {
   splitBarEl.addEventListener('mousedown', (event) => {
     toggleShadowCover(true);
     document.addEventListener('mousemove', resize, false);
-    splitBarEl.addEventListener(
+    document.body.addEventListener(
       'mouseup',
       () => {
-        document.removeEventListener('mousemove', resize, false);
+        const shadowContainerEl = document.getElementById('iframe-content-shadow-cover');
+        if (!shadowContainerEl) {
+          return;
+        }
+        // document.removeEventListener('mousemove', resize, false);
         // const shadowCoverEl = document.getElementById('iframe-content-shadow-cover');
         // shadowCoverEl.style.display = 'none';
         toggleShadowCover(false);
@@ -208,5 +212,5 @@ function mountSideWindow() {
   container.style.fontSize = '16px';
   container.style.color = '#333';
 
-  document.body.after(container);
+  document.body.append(container);
 })();
