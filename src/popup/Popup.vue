@@ -107,7 +107,6 @@ function openWindow() {
   const inputValue = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-input-url").value : document.querySelector(".iframe-input-url").value;
   // const inputValue = document.getElementsByClassName("iframe-input-url")[0].value
   if (inputValue && shadowEl) {
-    // TODO: ポップアップウィンドウ表示の実装 バックグラウンドJS側で開かなければならない
     sendMessage('SHOW_POPUP_WINDOW', { url: inputValue });
   } else if (inputValue) {
     chrome.windows.create(
@@ -119,6 +118,12 @@ function openWindow() {
     )
   }
 }
+
+function toggleSideWindow() {
+  sendMessage('TOGGLE_SIDE_WINDOW', {});
+}
+
+
 
 
 function deleteTab(deleteTab: IframeTab) {
@@ -313,6 +318,10 @@ onMounted(() => {
         <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="openWindow()"
           :title="getMessage('openWindowText')">
           <icomoon-free:new-tab />
+        </div>
+        <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="toggleSideWindow()"
+          :title="getMessage('toggleShowSideWindow')">
+          <zondicons:show-sidebar />
         </div>
         <div class="iframe-open-window cursor-pointer ms-2 me-2" @click="zoomIn()" :title="getMessage('zoomInText')">
           <ri:zoom-in-line />

@@ -69,6 +69,17 @@ onMessage('SHOW_POPUP_WINDOW', async (onObj) => {
   }
 });
 
+onMessage('TOGGLE_SIDE_WINDOW', async (onObj) => {
+  console.log('onObj', onObj);
+  try {
+    toggleSideWindow();
+  } catch {
+    return {
+      title: undefined,
+    };
+  }
+});
+
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
