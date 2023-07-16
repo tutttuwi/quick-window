@@ -89,6 +89,11 @@ function fetchIframe(event: any) {
   // document.getElementsByClassName(".iframe-element").item(0).src = "";
 }
 
+// const IFRAME_CONTENT_EL = `
+// <iframe id="iframe-content" class="list-scroll iframe-element" :src="fetchUrl()" frameborder="0"
+//             style="border: 0;width:100%;height:100%;"></iframe>
+// `
+
 function iframeReload() {
   const shadowEl = document.querySelector("#iframe-content-shadow");
   const inputValue = shadowEl ? shadowEl.shadowRoot.querySelector(".iframe-input-url").value : document.querySelector(".iframe-input-url").value;
@@ -96,10 +101,13 @@ function iframeReload() {
   if (inputValue && shadowEl) {
     shadowEl.shadowRoot.getElementById("iframe-content").src = inputValue; // インプットで上書き
     shadowEl.shadowRoot.getElementById("iframe-content").src += ''; // リロードさせる
+    // shadowEl.shadowRoot.getElementById("iframe-content").remove();
+    // shadowEl.shadowRoot.getElementById("iframe-content-wrapper").innerHTML = IFRAME_CONTENT_EL;
   } else if (inputValue) {
     document.getElementById("iframe-content").src = inputValue; // インプットで上書き
     document.getElementById("iframe-content").src += ''; // リロードさせる
-
+    // document.getElementById("iframe-content").remove();
+    // document.getElementById("iframe-content-wrapper").innerHTML = IFRAME_CONTENT_EL;
   }
 }
 function openWindow() {
@@ -343,7 +351,7 @@ onMounted(() => {
 
     <div class="iframe-body m-1" v-if="activateDate.getTime() > 0">
       <div style="width:100%;height:100%;overflow-x:hidden;">
-        <div style="width:100%;height:100%;overflow:hidden;">
+        <div id="iframe-content-wrapper" style="width:100%;height:100%;overflow:hidden;">
           <iframe id="iframe-content" class="list-scroll iframe-element" :src="fetchUrl()" frameborder="0"
             style="border: 0;width:100%;height:100%;"></iframe>
         </div>
